@@ -12,12 +12,18 @@ data class MarketPair(val ticker_id: String, val base: String, val target: Strin
 
 class GetMarkets(private val client: HttpHandler, private val baseURL: String) {
   fun main(): List<String> {
+    val pairs = fetchMarkets()
+
+    // Return only the names
+    return pairs.map{pair -> pair.ticker_id}
+  }
+
+  // Fetch all the markets
+  private fun fetchMarkets(): List<MarketPair> {
     val request = Request(Method.GET, "$baseURL/pairs")
 
     val response = client(request)
 
-    val pairs = Json.decodeFromString<List<MarketPair>>(response.bodyString())
-
-    return pairs.map{pair -> pair.ticker_id}
+    return Json.decodeFromString(response.bodyString())
   }
 }

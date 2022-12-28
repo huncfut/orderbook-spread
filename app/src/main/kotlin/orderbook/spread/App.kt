@@ -14,11 +14,12 @@ fun main() {
 }
 
 class App(private val client: HttpHandler, private val baseURL: String) {
+    // Reusable components
     private fun getMarkets() = GetMarkets(client, baseURL).main()
-    private fun getSpread() = GetSpread(client, baseURL).main()
+    private fun getSpread(name: String) = GetSpread(client, baseURL).main(name)
 
     fun createFile() {
         println(getMarkets())
-        println(getSpread())
+        println(getSpread("BTC_USD"))
     }
 }
