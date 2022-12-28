@@ -1,9 +1,11 @@
 package orderbook.spread
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.http4k.client.ApacheClient
 import org.http4k.core.HttpHandler
-import org.http4k.filter.ClientFilters
-import org.http4k.filter.RequestFilters
 
 // Setup
 suspend fun main() {
@@ -12,27 +14,20 @@ suspend fun main() {
 
     val app = App(client, apiURL)
 
-    app.createFile()
+    while(true) {
+        app.periodic()
+        delay(60*1000)
+    }
 }
 
 class App(private val client: HttpHandler, private val baseURL: String) {
     // Reusable components
     private fun getMarkets() = GetMarkets(client, baseURL).main()
     private fun getSpread(name: String) = GetSpread(client, baseURL).main(name)
+    private fun createFile(spreads: List<MarketSpread>) = CreateFile().main(spreads)
 
-    private enum class Groups { LOW, HIGH, NOT_FLUID, ERR }
-
-    fun createFile() {
-        val markets = getMarkets()
-
-        val spreads = markets.map { market -> getSpread(market) }
-            .groupBy{ when {
-                    it.spread == null -> Groups.NOT_FLUID
-                    it.spread <= 2 -> Groups.LOW
-                    it.spread > 2 -> Groups.HIGH// 2 is going to be in LOW
-                    else -> Groups.ERR
-            } }
-
-        spreads.map { println(it) }
+    fun periodic() {
+        val spreads = getMarkets().map { getSpread(it) }
+        createFile(spreads)
     }
 }

@@ -6,14 +6,13 @@ import kotlinx.serialization.json.Json
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method
 import org.http4k.core.Request
-import org.http4k.core.Status
 
 
 data class MarketSpread(val name: String, val spread: Double?)
 
 class GetSpread(private val client: HttpHandler, private val baseURL: String) {
 
-  // Possibly should use Strings instead of Doubles, as the precision is very important
+  // Possibly should use BigDecimals instead of Doubles, as the precision is very important
   @Serializable
   private data class MarketOrderbook(val timestamp: Long, val bids: List<List<Double>>, val asks: List<List<Double>>, val ticker_id: String)
 
