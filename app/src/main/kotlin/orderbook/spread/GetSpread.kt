@@ -9,7 +9,7 @@ import org.http4k.core.Request
 import org.http4k.core.Status
 
 
-data class MarketSpread(val name: String, val spread: Number?)
+data class MarketSpread(val name: String, val spread: Double?)
 
 class GetSpread(private val client: HttpHandler, private val baseURL: String) {
 
