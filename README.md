@@ -11,10 +11,14 @@ Make sure you have Gradle installed. Then, inside the main directory build the p
 gradle build      # Microsoft Windows
 ```
 
-Then run it:
+### Run
+To run the program use these:
 ```shell
 ./gradlew run     # Unix
 ```
 ```shell
 gradle run        # Microsoft Windows
 ```
+
+### State of the app
+Currently the app will create a report a minute after the previous one. All the reports are generated in the `app` directory.
