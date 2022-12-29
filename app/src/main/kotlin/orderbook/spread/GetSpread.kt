@@ -17,7 +17,7 @@ class GetSpread(private val client: HttpHandler, private val baseURL: String) {
   private data class MarketOrderbook(val timestamp: Long, val bids: List<List<Double>>, val asks: List<List<Double>>, val ticker_id: String)
 
   // return the market spread for a given market
-  fun main(name: String): MarketSpread {
+  fun start(name: String): MarketSpread {
     val orderbook = fetchMatket(name)
 
     // Check if possible to calculate spread

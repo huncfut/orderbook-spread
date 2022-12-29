@@ -11,7 +11,7 @@ import org.http4k.core.Request
 data class MarketPair(val ticker_id: String, val base: String, val target: String)
 
 class GetMarkets(private val client: HttpHandler, private val baseURL: String) {
-  fun main(): List<String> {
+  fun start(): List<String> {
     val pairs = fetchMarkets()
 
     // Return only the names

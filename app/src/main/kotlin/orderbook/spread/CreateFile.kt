@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter
 class CreateFile() {
   enum class Groups { LOW, HIGH, NOT_FLUID, ERR }
 
-  fun main(markets: List<MarketSpread>) {
+  fun start(markets: List<MarketSpread>) {
     val grouped = groupMarkets(markets)
 
     // Print in case of unexpected error
@@ -19,12 +19,11 @@ class CreateFile() {
     // Open file output
     val file = File(getFileName())
 
-    println(grouped)
-
     grouped.forEach { pair -> printGroup(file, pair.key, pair.value) }
-
   }
 
+  // Print header for the group and all the markets in it
+  // Format copied from recruitment task file
   private fun printGroup(file: File, group: Groups, markets: List<MarketSpread>) {
     file.appendText(
       when (group) {
@@ -52,11 +51,12 @@ class CreateFile() {
       .toSortedMap()
   }
 
+  // Return the name of the file from date
   private fun getFileName(): String {
     val now = LocalDateTime.now()
 
     val dateFormatter = DateTimeFormatter.ofPattern("yyyy_MM_dd")
-    val timeFormatter = DateTimeFormatter.ofPattern("HHmmss")
+    val timeFormatter = DateTimeFormatter.ofPattern("HHmmss") // 0-23 hours
 
     val date = now.format(dateFormatter)
     val time = now.format(timeFormatter)

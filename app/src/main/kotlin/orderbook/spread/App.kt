@@ -1,9 +1,6 @@
 package orderbook.spread
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.http4k.client.ApacheClient
 import org.http4k.core.HttpHandler
 
@@ -14,6 +11,7 @@ suspend fun main() {
 
     val app = App(client, apiURL)
 
+    // Generate the file 60 seconds after creating the previous one
     while(true) {
         app.periodic()
         delay(60*1000)
@@ -21,11 +19,12 @@ suspend fun main() {
 }
 
 class App(private val client: HttpHandler, private val baseURL: String) {
-    // Reusable components
-    private fun getMarkets() = GetMarkets(client, baseURL).main()
-    private fun getSpread(name: String) = GetSpread(client, baseURL).main(name)
-    private fun createFile(spreads: List<MarketSpread>) = CreateFile().main(spreads)
+    //
+    private fun getMarkets() = GetMarkets(client, baseURL).start()
+    private fun getSpread(name: String) = GetSpread(client, baseURL).start(name)
+    private fun createFile(spreads: List<MarketSpread>) = CreateFile().start(spreads)
 
+    // Generates the report and prints it to a file
     fun periodic() {
         val spreads = getMarkets().map { getSpread(it) }
         createFile(spreads)
